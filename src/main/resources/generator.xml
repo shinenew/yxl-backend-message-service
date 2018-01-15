@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <context id="MSTables" targetRuntime="MyBatis3" defaultModelType="flat">
+
+
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <property name="javaFileEncoding" value="utf-8"/>
+
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+
+        <commentGenerator type="com.zhubajie.mybatis.plugins.ZbjCommentGenerator">
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+
+
+        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
+                        <!--connectionURL="jdbc:mysql://116.62.207.246:36544/kxl_dev_db?useSSL=false"-->
+                        <!--userId="kxldevtest"-->
+                        <!--password="kJds66MBJsnsa92">-->
+        <!--</jdbcConnection>-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3307/kxl_notice_bill?useSSL=false"
+                        userId="root"
+                        password="tong">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+
+        <javaModelGenerator targetPackage="com.kingxunlian.noticebill.biz.income.dto" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="com.kingxunlian.noticebill.biz.income.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.kingxunlian.noticebill.biz.income.mapper"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--<table tableName="kxl_income_notice_bill" domainObjectName="IncomeNoticeBill" enableCountByExample="true"-->
+               <!--enableUpdateByExample="true"-->
+               <!--enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
+            <!--<property name="useActualColumnNames" value="false"/>-->
+            <!--<columnOverride column="owner_id" javaType="java.util.UUID"/>-->
+            <!--<columnOverride column="supplier_id" javaType="java.util.UUID"/>-->
+            <!--<columnOverride column="buyer_id" javaType="java.util.UUID"/>-->
+            <!--<columnOverride column="department_id" javaType="java.util.UUID"/>-->
+            <!--<columnOverride column="notice_bill_state" javaType="com.kingxunlian.noticebill.dto.enums.NoticeBillStateEnum"/>-->
+            <!--<columnOverride column="bill_match_state" javaType="com.kingxunlian.noticebill.dto.enums.BillMatchStateEnum"/>-->
+        <!--</table>-->
+
+
+        <table tableName="kxl_income_notice_bill_detail" domainObjectName="IncomeNoticeBillDetail" enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride column="owner_id" javaType="java.util.UUID"/>
+            <columnOverride column="supplier_id" javaType="java.util.UUID"/>
+            <columnOverride column="buyer_id" javaType="java.util.UUID"/>
+            <columnOverride column="department_id" javaType="java.util.UUID"/>
+            <columnOverride column="notice_bill_state" javaType="com.kingxunlian.noticebill.dto.enums.NoticeBillStateEnum"/>
+            <columnOverride column="bill_match_state" javaType="com.kingxunlian.noticebill.dto.enums.BillMatchStateEnum"/>
+        </table>
+
+        <!-- <table tableName="sd_task_def" domainObjectName="TaskDef" enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="task_id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <table tableName="sd_task_history" domainObjectName="TaskHistory" enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <table tableName="sd_task_history_detail" domainObjectName="TaskHistoryDetail" enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <table tableName="sd_alert_actions" domainObjectName="TaskAlertActions" enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <table tableName="sd_alert_action_log" domainObjectName="TaskAlertActionLog" enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <table tableName="sd_alert" domainObjectName="TaskAlert" enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <table tableName="sd_notify" domainObjectName="TaskNotify" enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true" >
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table> -->
+
+    </context>
+
+</generatorConfiguration>
