@@ -3,6 +3,8 @@ package com.kingxunlian.message.biz.service;
 import com.kingxunlian.message.biz.dao.MessageStateDao;
 import com.kingxunlian.message.biz.dao.MessageSystemDao;
 import com.kingxunlian.message.biz.dao.MessageTextDao;
+import com.kingxunlian.message.dto.request.MessageSendRequest;
+import com.kingxunlian.message.dto.response.MessageSendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,18 @@ public class MessageService implements IMessageService{
 
     @Autowired
     private MessageSystemDao messageSystemDao;
+
+
+    /**
+     * 发送消息
+     * @param request
+     * @return
+     */
+    public MessageSendResponse sendMessage(MessageSendRequest request){
+
+        return new MessageSendResponse();
+
+    }
 
 
 
