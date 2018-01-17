@@ -103,34 +103,14 @@
             <version>1.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.kingxunlian.invoice</groupId>
-            <artifactId>sco-invoice-service-api</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kingxunlian.noticebill</groupId>
-            <artifactId>sco-noticebill-service-api</artifactId>
-            <version>1.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kingxunlian</groupId>
-            <artifactId>sco-user-service-api</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.kingxunlian.callback</groupId>
-            <artifactId>sco-callback-center-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.kingxunlian.id</groupId>
             <artifactId>id-generator-service-api</artifactId>
             <version>1.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.kingxunlian.file</groupId>
-            <artifactId>kxl-file-service-api</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <groupId>com.kingxunlian.message</groupId>
+            <artifactId>kxl-message-service-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

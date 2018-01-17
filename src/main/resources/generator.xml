@@ -24,7 +24,7 @@
                         <!--password="kJds66MBJsnsa92">-->
         <!--</jdbcConnection>-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3307/kxl_notice_bill?useSSL=false"
+                        connectionURL="jdbc:mysql://127.0.0.1:3307/kxl_message?useSSL=false"
                         userId="root"
                         password="tong">
         </jdbcConnection>
@@ -34,16 +34,16 @@
         </javaTypeResolver>
 
 
-        <javaModelGenerator targetPackage="com.kingxunlian.noticebill.biz.income.dto" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.kingxunlian.message.biz.dto" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="com.kingxunlian.noticebill.biz.income.mapper" targetProject="src/main/java">
+        <sqlMapGenerator targetPackage="com.kingxunlian.message.biz.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.kingxunlian.noticebill.biz.income.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.kingxunlian.message.biz.mapper"
                              targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
@@ -61,18 +61,35 @@
         <!--</table>-->
 
 
-        <table tableName="kxl_income_notice_bill_detail" domainObjectName="IncomeNoticeBillDetail" enableCountByExample="true"
+        <table tableName="kxl_message_state" domainObjectName="MessageState" enableCountByExample="true"
                enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <property name="useActualColumnNames" value="false"/>
-            <columnOverride column="owner_id" javaType="java.util.UUID"/>
-            <columnOverride column="supplier_id" javaType="java.util.UUID"/>
-            <columnOverride column="buyer_id" javaType="java.util.UUID"/>
-            <columnOverride column="department_id" javaType="java.util.UUID"/>
-            <columnOverride column="notice_bill_state" javaType="com.kingxunlian.noticebill.dto.enums.NoticeBillStateEnum"/>
-            <columnOverride column="bill_match_state" javaType="com.kingxunlian.noticebill.dto.enums.BillMatchStateEnum"/>
+            <columnOverride column="send_user" javaType="java.util.UUID"/>
+            <columnOverride column="receive_user" javaType="java.util.UUID"/>
+            <columnOverride column="message_type" javaType="com.kingxunlian.message.dto.enums.MessageTypeEnum"/>
+            <columnOverride column="message_state" javaType="com.kingxunlian.message.dto.enums.MessageStateEnum"/>
         </table>
 
+        <table tableName="kxl_message_text" domainObjectName="MessageText" enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride column="send_user" javaType="java.util.UUID"/>
+            <columnOverride column="receive_user" javaType="java.util.UUID"/>
+            <columnOverride column="message_type" javaType="com.kingxunlian.message.dto.enums.MessageTypeEnum"/>
+            <columnOverride column="message_state" javaType="com.kingxunlian.message.dto.enums.MessageStateEnum"/>
+        </table>
+
+        <table tableName="kxl_message_sys" domainObjectName="MessageSystem" enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride column="send_user" javaType="java.util.UUID"/>
+            <columnOverride column="receive_user" javaType="java.util.UUID"/>
+            <columnOverride column="message_type" javaType="com.kingxunlian.message.dto.enums.MessageTypeEnum"/>
+            <columnOverride column="message_state" javaType="com.kingxunlian.message.dto.enums.MessageStateEnum"/>
+        </table>
         <!-- <table tableName="sd_task_def" domainObjectName="TaskDef" enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true" >
             <property name="useActualColumnNames" value="false"/>

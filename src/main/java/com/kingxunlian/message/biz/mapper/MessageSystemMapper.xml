@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kingxunlian.message.biz.mapper.MessageSystemMapper" >
+  <resultMap id="BaseResultMap" type="com.kingxunlian.message.biz.dto.MessageSystem" >
+    <id column="message_id" property="messageId" jdbcType="BIGINT" />
+    <result column="message_content" property="messageContent" jdbcType="VARCHAR" />
+    <result column="message_title" property="messageTitle" jdbcType="VARCHAR" />
+    <result column="message_url" property="messageUrl" jdbcType="VARCHAR" />
+    <result column="message_extra" property="messageExtra" jdbcType="VARCHAR" />
+    <result column="post_date" property="postDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    message_id, message_content, message_title, message_url, message_extra, post_date
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kingxunlian.message.biz.dto.MessageSystemExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from kxl_message_sys
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from kxl_message_sys
+    where message_id = #{messageId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from kxl_message_sys
+    where message_id = #{messageId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kingxunlian.message.biz.dto.MessageSystemExample" >
+    delete from kxl_message_sys
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kingxunlian.message.biz.dto.MessageSystem" >
+    insert into kxl_message_sys (message_id, message_content, message_title, 
+      message_url, message_extra, post_date
+      )
+    values (#{messageId,jdbcType=BIGINT}, #{messageContent,jdbcType=VARCHAR}, #{messageTitle,jdbcType=VARCHAR}, 
+      #{messageUrl,jdbcType=VARCHAR}, #{messageExtra,jdbcType=VARCHAR}, #{postDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kingxunlian.message.biz.dto.MessageSystem" >
+    insert into kxl_message_sys
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        message_id,
+      </if>
+      <if test="messageContent != null" >
+        message_content,
+      </if>
+      <if test="messageTitle != null" >
+        message_title,
+      </if>
+      <if test="messageUrl != null" >
+        message_url,
+      </if>
+      <if test="messageExtra != null" >
+        message_extra,
+      </if>
+      <if test="postDate != null" >
+        post_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        #{messageId,jdbcType=BIGINT},
+      </if>
+      <if test="messageContent != null" >
+        #{messageContent,jdbcType=VARCHAR},
+      </if>
+      <if test="messageTitle != null" >
+        #{messageTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="messageUrl != null" >
+        #{messageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="messageExtra != null" >
+        #{messageExtra,jdbcType=VARCHAR},
+      </if>
+      <if test="postDate != null" >
+        #{postDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kingxunlian.message.biz.dto.MessageSystemExample" resultType="java.lang.Integer" >
+    select count(*) from kxl_message_sys
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update kxl_message_sys
+    <set >
+      <if test="record.messageId != null" >
+        message_id = #{record.messageId,jdbcType=BIGINT},
+      </if>
+      <if test="record.messageContent != null" >
+        message_content = #{record.messageContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.messageTitle != null" >
+        message_title = #{record.messageTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.messageUrl != null" >
+        message_url = #{record.messageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.messageExtra != null" >
+        message_extra = #{record.messageExtra,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postDate != null" >
+        post_date = #{record.postDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update kxl_message_sys
+    set message_id = #{record.messageId,jdbcType=BIGINT},
+      message_content = #{record.messageContent,jdbcType=VARCHAR},
+      message_title = #{record.messageTitle,jdbcType=VARCHAR},
+      message_url = #{record.messageUrl,jdbcType=VARCHAR},
+      message_extra = #{record.messageExtra,jdbcType=VARCHAR},
+      post_date = #{record.postDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kingxunlian.message.biz.dto.MessageSystem" >
+    update kxl_message_sys
+    <set >
+      <if test="messageContent != null" >
+        message_content = #{messageContent,jdbcType=VARCHAR},
+      </if>
+      <if test="messageTitle != null" >
+        message_title = #{messageTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="messageUrl != null" >
+        message_url = #{messageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="messageExtra != null" >
+        message_extra = #{messageExtra,jdbcType=VARCHAR},
+      </if>
+      <if test="postDate != null" >
+        post_date = #{postDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where message_id = #{messageId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kingxunlian.message.biz.dto.MessageSystem" >
+    update kxl_message_sys
+    set message_content = #{messageContent,jdbcType=VARCHAR},
+      message_title = #{messageTitle,jdbcType=VARCHAR},
+      message_url = #{messageUrl,jdbcType=VARCHAR},
+      message_extra = #{messageExtra,jdbcType=VARCHAR},
+      post_date = #{postDate,jdbcType=TIMESTAMP}
+    where message_id = #{messageId,jdbcType=BIGINT}
+  </update>
+</mapper>
