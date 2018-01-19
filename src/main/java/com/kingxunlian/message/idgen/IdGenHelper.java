@@ -4,7 +4,7 @@ import com.kingxunlian.common.id.IdGeneratorClient;
 import com.kingxunlian.common.id.request.BatchIdGenerateRequest;
 import com.kingxunlian.common.id.request.IdGenerateRequest;
 import com.kingxunlian.exception.XLException;
-import com.kingxunlian.noticebill.exception.NoticeBillErrorCodeEnum;
+import com.kingxunlian.message.exception.MessageErrorCodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class IdGenHelper {
         }catch (Exception e){
             String msg = MessageFormat.format("GenId from Id-generator-service failed,message is:{0}",e.getMessage());
             logger.error(msg);
-            throw new XLException(msg, NoticeBillErrorCodeEnum.NOTICE_BILL_STATE_ERROR);
+            throw new XLException(msg, MessageErrorCodeEnum.SERVER_INNER_ERROR);
         }
     }
 
@@ -61,7 +61,7 @@ public class IdGenHelper {
         }catch (Exception e){
             String msg = MessageFormat.format("GenId from Id-generator-service failed,message is:{0}",e.getMessage());
             logger.error(msg);
-            throw new XLException(msg, NoticeBillErrorCodeEnum.NOTICE_BILL_STATE_ERROR);
+            throw new XLException(msg, MessageErrorCodeEnum.SERVER_INNER_ERROR);
         }
     }
 }

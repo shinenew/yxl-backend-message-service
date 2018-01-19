@@ -3,8 +3,11 @@ package com.kingxunlian.message.biz.mapper;
 import com.kingxunlian.message.biz.dto.MessageText;
 import com.kingxunlian.message.biz.dto.MessageTextExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface MessageTextMapper {
     int countByExample(MessageTextExample example);
 

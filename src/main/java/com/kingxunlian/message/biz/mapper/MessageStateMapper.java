@@ -3,8 +3,11 @@ package com.kingxunlian.message.biz.mapper;
 import com.kingxunlian.message.biz.dto.MessageState;
 import com.kingxunlian.message.biz.dto.MessageStateExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface MessageStateMapper {
     int countByExample(MessageStateExample example);
 

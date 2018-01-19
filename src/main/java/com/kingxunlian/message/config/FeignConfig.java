@@ -1,11 +1,7 @@
 package com.kingxunlian.message.config;
 
-import com.kingxunlian.callback.business.callbackcenter.feginclient.ExternalCallBackFeignClient;
 import com.kingxunlian.common.id.IdGeneratorClient;
-import com.kingxunlian.domain.file.client.IFileServiceFeignClient;
-import com.kingxunlian.domain.invoice.client.IInvoiceFeignClient;
 import com.kingxunlian.mq.producer.MQGatewayClient;
-import com.kingxunlian.user.client.ICompanyConfigClient;
 import feign.Logger;
 import org.springframework.boot.autoconfigure.web.WebMvcRegistrations;
 import org.springframework.boot.autoconfigure.web.WebMvcRegistrationsAdapter;
@@ -17,9 +13,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 @Configuration
-@EnableFeignClients(basePackageClasses = { ExternalCallBackFeignClient.class,
-        MQGatewayClient.class, IdGeneratorClient.class, IFileServiceFeignClient.class,
-        IInvoiceFeignClient.class, ICompanyConfigClient.class})
+@EnableFeignClients(basePackageClasses = {MQGatewayClient.class, IdGeneratorClient.class})
 public class FeignConfig {
     @Bean
     Logger.Level feignLoggerLevel() {
