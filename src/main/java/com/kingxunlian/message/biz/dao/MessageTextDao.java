@@ -47,6 +47,7 @@ public class MessageTextDao {
         List<MessageText> messageTextList = messageTextMapper.selectByExample(example);
         if (messageTextList.size() == 0){
             logger.warn("MessageText query result is null,condition is:{}", JSON.toJSONString(messageText));
+            return null;
         }
         return messageTextList.get(0);
     }
@@ -62,6 +63,22 @@ public class MessageTextDao {
         List<MessageText> messageTextList = messageTextMapper.selectByExample(example);
         if (messageTextList.size() == 0){
             logger.warn("MessageText query result is null,condition is:{}", JSON.toJSONString(messageText));
+        }
+        return messageTextList;
+    }
+
+
+    /**
+     * 根据条件查询多条数据
+     * @param messageList
+     * @return
+     */
+    public List<MessageText> findListByMessageIdList(List<Long> messageList){
+        MessageTextExample example = new MessageTextExample();
+        example.createCriteria().andMessageIdIn(messageList);
+        List<MessageText> messageTextList = messageTextMapper.selectByExample(example);
+        if (messageTextList.size() == 0){
+            logger.warn("MessageText query result is null,condition is:{}", JSON.toJSONString(messageList));
         }
         return messageTextList;
     }

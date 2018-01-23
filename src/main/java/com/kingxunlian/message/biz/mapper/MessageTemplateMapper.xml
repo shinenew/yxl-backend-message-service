@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kingxunlian.message.biz.mapper.MessageTemplateMapper" >
+  <resultMap id="BaseResultMap" type="com.kingxunlian.message.biz.dto.MessageTemplate" >
+    <id column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
+    <result column="template_name" property="templateName" jdbcType="VARCHAR" />
+    <result column="template_context" property="templateContext" jdbcType="VARCHAR" />
+    <result column="template_url" property="templateUrl" jdbcType="VARCHAR" />
+    <result column="template_app" property="templateApp" jdbcType="VARCHAR" />
+    <result column="template_enable" property="templateEnable" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    template_id, template_code, template_name, template_context, template_url, template_app, 
+    template_enable, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kingxunlian.message.biz.dto.MessageTemplateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from kxl_message_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from kxl_message_template
+    where template_id = #{templateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from kxl_message_template
+    where template_id = #{templateId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kingxunlian.message.biz.dto.MessageTemplateExample" >
+    delete from kxl_message_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kingxunlian.message.biz.dto.MessageTemplate" >
+    insert into kxl_message_template (template_id, template_code, template_name, 
+      template_context, template_url, template_app, 
+      template_enable, create_time, update_time
+      )
+    values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
+      #{templateContext,jdbcType=VARCHAR}, #{templateUrl,jdbcType=VARCHAR}, #{templateApp,jdbcType=VARCHAR}, 
+      #{templateEnable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kingxunlian.message.biz.dto.MessageTemplate" >
+    insert into kxl_message_template
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="templateCode != null" >
+        template_code,
+      </if>
+      <if test="templateName != null" >
+        template_name,
+      </if>
+      <if test="templateContext != null" >
+        template_context,
+      </if>
+      <if test="templateUrl != null" >
+        template_url,
+      </if>
+      <if test="templateApp != null" >
+        template_app,
+      </if>
+      <if test="templateEnable != null" >
+        template_enable,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="templateId != null" >
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="templateCode != null" >
+        #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null" >
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="templateContext != null" >
+        #{templateContext,jdbcType=VARCHAR},
+      </if>
+      <if test="templateUrl != null" >
+        #{templateUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="templateApp != null" >
+        #{templateApp,jdbcType=VARCHAR},
+      </if>
+      <if test="templateEnable != null" >
+        #{templateEnable,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kingxunlian.message.biz.dto.MessageTemplateExample" resultType="java.lang.Integer" >
+    select count(*) from kxl_message_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update kxl_message_template
+    <set >
+      <if test="record.templateId != null" >
+        template_id = #{record.templateId,jdbcType=BIGINT},
+      </if>
+      <if test="record.templateCode != null" >
+        template_code = #{record.templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateName != null" >
+        template_name = #{record.templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateContext != null" >
+        template_context = #{record.templateContext,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateUrl != null" >
+        template_url = #{record.templateUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateApp != null" >
+        template_app = #{record.templateApp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templateEnable != null" >
+        template_enable = #{record.templateEnable,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update kxl_message_template
+    set template_id = #{record.templateId,jdbcType=BIGINT},
+      template_code = #{record.templateCode,jdbcType=VARCHAR},
+      template_name = #{record.templateName,jdbcType=VARCHAR},
+      template_context = #{record.templateContext,jdbcType=VARCHAR},
+      template_url = #{record.templateUrl,jdbcType=VARCHAR},
+      template_app = #{record.templateApp,jdbcType=VARCHAR},
+      template_enable = #{record.templateEnable,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kingxunlian.message.biz.dto.MessageTemplate" >
+    update kxl_message_template
+    <set >
+      <if test="templateCode != null" >
+        template_code = #{templateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null" >
+        template_name = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="templateContext != null" >
+        template_context = #{templateContext,jdbcType=VARCHAR},
+      </if>
+      <if test="templateUrl != null" >
+        template_url = #{templateUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="templateApp != null" >
+        template_app = #{templateApp,jdbcType=VARCHAR},
+      </if>
+      <if test="templateEnable != null" >
+        template_enable = #{templateEnable,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where template_id = #{templateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kingxunlian.message.biz.dto.MessageTemplate" >
+    update kxl_message_template
+    set template_code = #{templateCode,jdbcType=VARCHAR},
+      template_name = #{templateName,jdbcType=VARCHAR},
+      template_context = #{templateContext,jdbcType=VARCHAR},
+      template_url = #{templateUrl,jdbcType=VARCHAR},
+      template_app = #{templateApp,jdbcType=VARCHAR},
+      template_enable = #{templateEnable,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where template_id = #{templateId,jdbcType=BIGINT}
+  </update>
+</mapper>

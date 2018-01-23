@@ -48,6 +48,7 @@ public class MessageSystemDao {
         List<MessageSystem> messageSystemList = messageSystemMapper.selectByExample(example);
         if (messageSystemList.size() == 0){
             logger.warn("SystemMessage query result is null,condition is:{}", JSON.toJSONString(messageSystem));
+            return null;
         }
         return messageSystemList.get(0);
     }

@@ -47,6 +47,7 @@ public class MessageStateDao {
         List<MessageState> messageStateList = messageStateMapper.selectByExample(stateExample);
         if (messageStateList.size() == 0){
             logger.warn("Message query result is null,condition is:{}",filter);
+            return null;
         }
         return messageStateList.get(0);
     }
