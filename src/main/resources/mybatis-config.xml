@@ -5,5 +5,9 @@
 <configuration>
     <typeHandlers>
         <typeHandler handler="com.kingxunlian.message.typehandlers.UUIDTypeHandler"/>
+        <typeHandler handler="com.kingxunlian.message.typehandlers.IntEnumTypeHandler"
+                     javaType="com.kingxunlian.message.dto.enums.MessageTypeEnum"/>
+        <typeHandler handler="com.kingxunlian.message.typehandlers.IntEnumTypeHandler"
+                     javaType="com.kingxunlian.message.dto.enums.MessageStateEnum"/>
     </typeHandlers>
 </configuration>

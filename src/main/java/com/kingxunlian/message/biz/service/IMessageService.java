@@ -3,6 +3,9 @@ package com.kingxunlian.message.biz.service;
 import com.kingxunlian.message.dto.request.MessageSendRequest;
 import com.kingxunlian.message.dto.response.MessageSendResponse;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * @Descriptions:
  * @Author: chenliang@tsfinance.com
@@ -11,4 +14,10 @@ import com.kingxunlian.message.dto.response.MessageSendResponse;
 public interface IMessageService {
 
     MessageSendResponse sendMessage(MessageSendRequest request);
+
+    Integer initUserMessage(UUID userId);
+
+    List<MessageSendResponse> getUserMessage(UUID userId);
+
+    Integer getUserUnreadMessageCount(UUID userId);
 }

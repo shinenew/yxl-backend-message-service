@@ -38,6 +38,15 @@ public class MessageSystemDao {
     }
 
     /**
+     * 根据主键查询消息
+     * @param messageId
+     * @return
+     */
+    public MessageSystem findByMessageId(Long messageId){
+        return messageSystemMapper.selectByPrimaryKey(messageId);
+
+    }
+    /**
      * 根据筛选条件查询一条数据
      * @param messageSystem
      * @return

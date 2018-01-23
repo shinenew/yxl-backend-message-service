@@ -37,6 +37,14 @@ public class MessageTextDao {
     }
 
     /**
+     * 根据主键查询
+     * @param messageId
+     * @return
+     */
+    public MessageText findByMessageId(Long messageId){
+        return  messageTextMapper.selectByPrimaryKey(messageId);
+    }
+    /**
      * 根据条件查询单条
      * @param messageText
      * @return

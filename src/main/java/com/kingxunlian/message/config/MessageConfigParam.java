@@ -5,6 +5,7 @@ import com.ctrip.framework.apollo.spring.annotation.ApolloConfigChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.logback.LogbackLoggingSystem;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -22,6 +23,8 @@ public class MessageConfigParam {
     private static final Logger logger = LoggerFactory.getLogger(MessageConfigParam.class);
 
 
+    @Value("${redis.message.count.expire.time}")
+    private Long messageCountExpireTime;
 
 
 
@@ -45,6 +48,12 @@ public class MessageConfigParam {
     //==================== 配置自动刷新 end ===========================
 
 
+    public Long getMessageCountExpireTime() {
+        return messageCountExpireTime;
+    }
 
-
+    public MessageConfigParam setMessageCountExpireTime(Long messageCountExpireTime) {
+        this.messageCountExpireTime = messageCountExpireTime;
+        return this;
+    }
 }

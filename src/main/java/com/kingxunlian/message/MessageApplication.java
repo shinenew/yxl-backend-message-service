@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableDiscoveryClient
 @EnableTransactionManagement
 @EnableXLStarter
-@EnableApolloConfig({"application","kxl.consul", "kxl.actuator"})
+@EnableApolloConfig({"application","kxl.consul", "kxl.actuator","kxl.redis"})
 public class MessageApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageApplication.class);
