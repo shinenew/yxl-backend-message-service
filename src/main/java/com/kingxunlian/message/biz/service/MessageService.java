@@ -305,6 +305,12 @@ public class MessageService implements IMessageService{
                 Matcher matcher = pattern.matcher(content);
                 content = matcher.replaceAll(entry.getValue());
             }
+            //如果替换后文本里还是有${},则抛出异常
+            if (content.lastIndexOf("${") != -1){
+                String msg = MessageFormat.format("Parameters and templates do not match,please check!Send Parameter is:{0}",JSON.toJSONString(map));
+                logger.error(msg);
+                throw new XLException(msg,MessageErrorCodeEnum.SERVER_INNER_ERROR);
+            }
         }catch (Exception e){
             e.printStackTrace();
             String msg = MessageFormat.format("Render message template failed,message is:{0}",e.getMessage());

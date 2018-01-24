@@ -15,6 +15,10 @@ create table kxl_message_state
 )
 ;
 
+create index receive_user_index
+	on kxl_message_state (receive_user)
+;
+
 create table kxl_message_sys
 (
 	message_id bigint not null comment '系统消息主键'
@@ -27,6 +31,26 @@ create table kxl_message_sys
 	constraint kxl_message_sys_message_id_uindex
 		unique (message_id)
 )
+;
+
+create table kxl_message_template
+(
+	template_id bigint not null comment '消息模版ID'
+		primary key,
+	template_code varchar(36) not null comment '模版编码',
+	template_name varchar(64) not null comment '模板名称',
+	template_context varchar(200) not null comment '模版内容，不能超过200个字符',
+	template_url varchar(128) not null comment '模块跳转地址',
+	template_app varchar(36) not null comment '模板所属系统',
+	template_enable tinyint not null comment '模版是否启用',
+	create_time datetime null comment '创建时间',
+	update_time datetime null comment '更新时间',
+	constraint kxl_message_template_template_id_uindex
+		unique (template_id),
+	constraint kxl_message_template_template_code_uindex
+		unique (template_code)
+)
+comment '消息系统模版'
 ;
 
 create table kxl_message_text
@@ -45,6 +69,7 @@ create table kxl_message_text
 		unique (message_id)
 )
 ;
+
 
 
 
