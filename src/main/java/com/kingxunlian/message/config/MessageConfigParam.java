@@ -26,6 +26,12 @@ public class MessageConfigParam {
     @Value("${redis.message.count.expire.time}")
     private Long messageCountExpireTime;
 
+    @Value("${rocketmq.topic.batch.send}")
+    private String messageBatchSendTopic;
+
+    @Value("${rocketmq.consumer.group.batch.send}")
+    private String messageBatchSendConsumer;
+
 
 
     //==================== 配置自动刷新 start =========================
@@ -54,6 +60,24 @@ public class MessageConfigParam {
 
     public MessageConfigParam setMessageCountExpireTime(Long messageCountExpireTime) {
         this.messageCountExpireTime = messageCountExpireTime;
+        return this;
+    }
+
+    public String getMessageBatchSendTopic() {
+        return messageBatchSendTopic;
+    }
+
+    public MessageConfigParam setMessageBatchSendTopic(String messageBatchSendTopic) {
+        this.messageBatchSendTopic = messageBatchSendTopic;
+        return this;
+    }
+
+    public String getMessageBatchSendConsumer() {
+        return messageBatchSendConsumer;
+    }
+
+    public MessageConfigParam setMessageBatchSendConsumer(String messageBatchSendConsumer) {
+        this.messageBatchSendConsumer = messageBatchSendConsumer;
         return this;
     }
 }

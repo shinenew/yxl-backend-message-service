@@ -11,6 +11,7 @@ import com.kingxunlian.message.biz.dto.MessageState;
 import com.kingxunlian.message.biz.dto.MessageSystem;
 import com.kingxunlian.message.biz.dto.MessageTemplate;
 import com.kingxunlian.message.biz.dto.MessageText;
+import com.kingxunlian.message.biz.dto.SendMessageBatchDto;
 import com.kingxunlian.message.config.MessageConfigParam;
 import com.kingxunlian.message.dto.enums.MessageStateEnum;
 import com.kingxunlian.message.dto.enums.MessageTypeEnum;
@@ -18,12 +19,18 @@ import com.kingxunlian.message.dto.request.MessageSendRequest;
 import com.kingxunlian.message.dto.response.MessageSendResponse;
 import com.kingxunlian.message.exception.MessageErrorCodeEnum;
 import com.kingxunlian.message.idgen.IdGenHelper;
+import com.kingxunlian.message.mq.MQProducer;
+import com.kingxunlian.message.mq.MQProducerDto;
 import com.kingxunlian.message.redis.RedisTemplateKeyUtil;
+import com.kingxunlian.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -43,6 +50,7 @@ import java.util.stream.Collectors;
  * @Date: create in 2018/1/17 下午5:46
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class MessageService implements IMessageService{
 
     private static final Logger logger = LoggerFactory.getLogger(MessageService.class);
@@ -67,6 +75,9 @@ public class MessageService implements IMessageService{
 
     @Autowired
     private MessageConfigParam messageConfigParam;
+
+    @Autowired
+    private MQProducer mqProducer;
 
 
     /**
@@ -102,6 +113,31 @@ public class MessageService implements IMessageService{
         return new MessageSendResponse();
     }
 
+
+    /**
+     * 将一条消息标记为已读
+     * @param messageId
+     * @return
+     */
+    public Boolean readMessage(UUID userId,Long messageId){
+        MessageState stateQuery = new MessageState();
+        stateQuery.setReceiveUser(userId);
+        stateQuery.setMessageId(messageId);
+        MessageState messageState = messageStateDao.findOneByFilter(stateQuery);
+        if (messageState == null){
+            String msg = MessageFormat.format("Message :{0} receive user :{1} not found!",messageId,userId.toString());
+            logger.error(msg);
+            throw new XLException(msg,MessageErrorCodeEnum.MESSAGE_NOT_FOUND);
+        }
+        if (!MessageStateEnum.UNREAD.equals(messageState.getMessageState())){
+            logger.error("Message is not unread,state error!");
+            return false;
+        }
+        messageState.setMessageState(MessageStateEnum.READ);
+        messageState.setUpdateTime(new Date());
+        messageStateDao.updaupdateByPrimaryKeyteBy(messageState);
+        return true;
+    }
 
     /**
      * 发送单条消息
@@ -171,17 +207,47 @@ public class MessageService implements IMessageService{
         messageText.setMessageContent(messageContext);
         messageText.setMessageExtra(request.getMessageExtra());
         messageTextDao.insert(messageText);
+        //发送消息到MQ
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronizationAdapter() {
+                    @Override
+                    public void afterCommit() {
+                        //发送mq
+                        SendMessageBatchDto messageBatchDto = new SendMessageBatchDto();
+                        messageBatchDto.setMessageId(messageId);
+                        messageBatchDto.setMessageType(request.getMessageType());
+                        messageBatchDto.setReceiveUserList(receiveUserList);
+                        MQProducerDto<SendMessageBatchDto> producerDto = new MQProducerDto<>();
+                        producerDto.setBody(messageBatchDto);
+                        producerDto.setKey(messageId.toString());
+                        producerDto.setTopic(messageConfigParam.getMessageBatchSendTopic());
+                        mqProducer.sendToQueue(producerDto);
+                    }
+                }
+        );
+        return Lists.newArrayList(messageText);
+    }
+
+
+    /**
+     * 消费消息并批量发送消息
+     * @param sendMessageBatchDto
+     */
+    public void consumerAndSendBatchMessage(SendMessageBatchDto sendMessageBatchDto){
+        List<UUID> receiveUserList = sendMessageBatchDto.getReceiveUserList();
+        Long messageId = sendMessageBatchDto.getMessageId();
+        MessageTypeEnum messageType = sendMessageBatchDto.getMessageType();
         //循环插入多条消息
         for (UUID userId:receiveUserList){
             try {
                 MessageState messageState = new MessageState();
                 messageState.setMessageId(messageId);
-                messageState.setSendUser(request.getSendUser());
+                messageState.setSendUser(userId);
                 messageState.setReceiveUser(userId);
                 messageState.setCreateTime(new Date());
                 messageState.setIsDelete(0);
                 messageState.setMessageState(MessageStateEnum.UNREAD);
-                messageState.setMessageType(request.getMessageType());
+                messageState.setMessageType(messageType);
                 messageStateDao.insert(messageState);
                 //判断当前用户是否有缓存，有则更新缓存里面的消息条数
                 List<MessageState> userUnreadMessages = getUserUnreadMessage(userId);
@@ -198,11 +264,9 @@ public class MessageService implements IMessageService{
                 logger.error("Send Message :{} to user:{} failed,exception message is :{}",messageId,userId,e.getMessage());
                 e.printStackTrace();
             }
-
         }
-        return Lists.newArrayList(messageText);
-
     }
+
 
     /**
      * 发送系统消息

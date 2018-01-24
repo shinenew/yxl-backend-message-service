@@ -1,5 +1,6 @@
 package com.kingxunlian.message.biz.service;
 
+import com.kingxunlian.message.biz.dto.SendMessageBatchDto;
 import com.kingxunlian.message.dto.request.MessageSendRequest;
 import com.kingxunlian.message.dto.response.MessageSendResponse;
 
@@ -20,4 +21,8 @@ public interface IMessageService {
     List<MessageSendResponse> getUserMessage(UUID userId);
 
     Integer getUserUnreadMessageCount(UUID userId);
+
+    void consumerAndSendBatchMessage(SendMessageBatchDto sendMessageBatchDto);
+
+    Boolean readMessage(UUID userId,Long messageId);
 }

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -18,6 +19,7 @@ import java.util.Date;
  * @Date: create in 2018/1/22 下午3:02
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TemplateService implements ITemplateService{
 
     private static final Logger logger = LoggerFactory.getLogger(TemplateService.class);

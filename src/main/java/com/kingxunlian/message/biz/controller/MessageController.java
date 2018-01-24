@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -42,6 +43,22 @@ public class MessageController {
         MessageSendResponse messageSendResponse = messageService.sendMessage(messageSendRequest);
         return XLBaseResponse.newInstance(messageSendResponse);
     }
+
+
+    /**
+     * 阅读消息
+     * @param messageId
+     * @return
+     */
+    @RequestMapping(value = "/read",method = RequestMethod.GET)
+    @ApiOperation("消息管理-阅读消息")
+    public XLBaseResponse<Boolean> readMessage(@RequestParam("messageId") Long messageId){
+        XLRequestHeader requestHeader =  XLRequestContextHolder.assertHeader();
+        UUID userId = requestHeader.getUserId();
+        Boolean result = messageService.readMessage(userId,messageId);
+        return XLBaseResponse.newInstance(result);
+    }
+
 
     /**
      * 初始化用户的消息

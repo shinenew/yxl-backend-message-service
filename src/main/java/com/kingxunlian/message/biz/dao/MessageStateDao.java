@@ -83,4 +83,16 @@ public class MessageStateDao {
     }
 
 
+    /**
+     * 通过主键更新
+     * @param messageState
+     * @return
+     */
+    public MessageState updaupdateByPrimaryKeyteBy(MessageState messageState){
+        messageStateMapper.updateByPrimaryKey(messageState);
+        return  messageState;
+
+    }
+
+
 }
