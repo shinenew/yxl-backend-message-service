@@ -11,7 +11,7 @@
     </appender>
 
     <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${user.dir}/logs/notice_bill.log</file>
+        <file>${user.dir}/logs/message.log</file>
 
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>TRACE</level>
@@ -19,7 +19,7 @@
 
         <!-- 可让每天产生一个日志文件，最多 10 个，自动回滚 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${user.dir}/logs/old/invoice/notice_bill-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${user.dir}/logs/old/message/message-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>10</maxHistory>
         </rollingPolicy>
 

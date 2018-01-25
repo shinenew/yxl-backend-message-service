@@ -125,7 +125,7 @@ public class MessageService implements IMessageService{
         stateQuery.setMessageId(messageId);
         MessageState messageState = messageStateDao.findOneByFilter(stateQuery);
         if (messageState == null){
-            String msg = MessageFormat.format("Message :{0} receive user :{1} not found!",messageId,userId.toString());
+            String msg = MessageFormat.format("Message :{0} not found!",messageId.toString());
             logger.error(msg);
             throw new XLException(msg,MessageErrorCodeEnum.MESSAGE_NOT_FOUND);
         }
