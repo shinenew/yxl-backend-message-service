@@ -1,5 +1,8 @@
 package com.kingxunlian.message.biz.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +10,9 @@ public class MessageTemplate implements Serializable {
     /**
      * 消息模版ID
      */
+    @JSONField(
+            serializeUsing = ToStringSerializer.class
+    )
     private Long templateId;
 
     /**

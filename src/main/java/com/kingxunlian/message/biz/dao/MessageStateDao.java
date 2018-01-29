@@ -1,8 +1,10 @@
 package com.kingxunlian.message.biz.dao;
 
+import com.google.common.collect.Lists;
 import com.kingxunlian.message.biz.dto.MessageState;
 import com.kingxunlian.message.biz.dto.MessageStateExample;
 import com.kingxunlian.message.biz.mapper.MessageStateMapper;
+import com.kingxunlian.message.dto.request.MessageListFilter;
 import com.kingxunlian.utils.mybatis.MybatisExampleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +63,23 @@ public class MessageStateDao {
     public List<MessageState> findListByFilter(MessageState filter){
         MessageStateExample stateExample = new MessageStateExample();
         MybatisExampleUtils.genCriteriaByFilter(stateExample.createCriteria(),filter);
+        List<MessageState> messageStateList = messageStateMapper.selectByExample(stateExample);
+        if (messageStateList.size() == 0){
+            logger.warn("Message query result is null,condition is:{}",filter);
+        }
+        return messageStateList;
+    }
+
+
+    /**
+     * 通过条件查询多条
+     * @param filter
+     * @return
+     */
+    public List<MessageState> findListByFilter(MessageListFilter filter){
+        MessageStateExample stateExample = new MessageStateExample();
+        List<String> ignoreList = Lists.newArrayList("pageNum","pageSize");
+        MybatisExampleUtils.genCriteriaByFilter(stateExample.createCriteria(),filter,ignoreList);
         List<MessageState> messageStateList = messageStateMapper.selectByExample(stateExample);
         if (messageStateList.size() == 0){
             logger.warn("Message query result is null,condition is:{}",filter);

@@ -1,5 +1,6 @@
 package com.kingxunlian.message.biz.controller;
 
+import com.kingxunlian.common.PageList;
 import com.kingxunlian.common.XLBaseResponse;
 import com.kingxunlian.context.XLRequestContextHolder;
 import com.kingxunlian.context.XLRequestHeader;
@@ -52,13 +53,41 @@ public class MessageController {
      */
     @RequestMapping(value = "/read",method = RequestMethod.GET)
     @ApiOperation("消息管理-阅读消息")
-    public XLBaseResponse<Boolean> readMessage(@RequestParam("messageId") Long messageId){
+    public XLBaseResponse<MessageSendResponse> readMessage(@RequestParam("messageId") Long messageId){
         XLRequestHeader requestHeader =  XLRequestContextHolder.assertHeader();
         UUID userId = requestHeader.getUserId();
-        Boolean result = messageService.readMessage(userId,messageId);
+        MessageSendResponse result = messageService.readMessage(userId,messageId);
         return XLBaseResponse.newInstance(result);
     }
 
+
+    /**
+     * 删除消息
+     * @param messageId
+     * @return
+     */
+    @RequestMapping(value = "delete",method = RequestMethod.GET)
+    @ApiOperation("消息管理-删除消息")
+    public XLBaseResponse<Boolean> deleteMessage(@RequestParam("messageId")Long messageId){
+        XLRequestHeader requestHeader =  XLRequestContextHolder.assertHeader();
+        UUID userId = requestHeader.getUserId();
+        Boolean result = messageService.deleteMessage(userId,messageId);
+        return XLBaseResponse.newInstance(result);
+    }
+
+
+    /**
+     * 清空当前用户下的消息
+     * @return
+     */
+    @RequestMapping(value = "deleteAll",method = RequestMethod.GET)
+    @ApiOperation("消息管理-清空当前用户下的消息")
+    public XLBaseResponse<Boolean> deleteAllMessage(){
+        XLRequestHeader requestHeader =  XLRequestContextHolder.assertHeader();
+        UUID userId = requestHeader.getUserId();
+        Boolean result = messageService.deleteAllMessage(userId);
+        return XLBaseResponse.newInstance(result);
+    }
 
     /**
      * 初始化用户的消息
@@ -92,10 +121,10 @@ public class MessageController {
      */
     @RequestMapping(value = "/getUserMessage",method = RequestMethod.GET)
     @ApiOperation("消息管理-获取用户消息")
-    public XLBaseResponse<List<MessageSendResponse>> getUserMessage(){
+    public XLBaseResponse<PageList<MessageSendResponse>> getUserMessage(@RequestParam("pageNum")Integer pageNum,@RequestParam("pageSize")Integer pageSize){
         XLRequestHeader requestHeader =  XLRequestContextHolder.assertHeader();
         UUID userId = requestHeader.getUserId();
-        List<MessageSendResponse> userMessageList = messageService.getUserMessage(userId);
+        PageList<MessageSendResponse> userMessageList = messageService.getUserMessage(userId,pageNum,pageSize);
         return XLBaseResponse.newInstance(userMessageList);
     }
 }

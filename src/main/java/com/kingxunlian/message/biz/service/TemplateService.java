@@ -1,10 +1,16 @@
 package com.kingxunlian.message.biz.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.kingxunlian.common.PageList;
 import com.kingxunlian.message.biz.dao.MessageTemplateDao;
+import com.kingxunlian.message.biz.dto.MessageState;
 import com.kingxunlian.message.biz.dto.MessageTemplate;
 import com.kingxunlian.message.dto.request.MessageTemplateAddRequest;
+import com.kingxunlian.message.dto.request.MessageTemplateListFilter;
 import com.kingxunlian.message.dto.response.MessageTemplateResponse;
 import com.kingxunlian.message.idgen.IdGenHelper;
+import com.kingxunlian.utils.PageListUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +77,34 @@ public class TemplateService implements ITemplateService{
         return messageTemplateResponse;
     }
 
+    /**
+     * 查询模板列表
+     * @param templateListFilter
+     * @return
+     */
+    public PageList<MessageTemplate> listTemplateByFilter(MessageTemplateListFilter templateListFilter){
+        final Page<MessageTemplate> page = PageHelper.startPage(
+                templateListFilter.getPageNum(),
+                templateListFilter.getPageSize());
+        messageTemplateDao.findListByFilter(templateListFilter);
+        return PageListUtil.createPageList(page);
+    }
 
+
+    /**
+     * 修改模版状态
+     * @param messageTemplate
+     * @return
+     */
+    public Boolean updateTemplateState(MessageTemplate messageTemplate){
+        MessageTemplate update = new MessageTemplate();
+        update.setTemplateEnable(messageTemplate.getTemplateEnable());
+        update.setUpdateTime(new Date());
+        MessageTemplate filter = new MessageTemplate();
+        filter.setTemplateCode(messageTemplate.getTemplateCode());
+        messageTemplateDao.updateRecordBySeletive(update,filter);
+        return true;
+    }
 
 
 }

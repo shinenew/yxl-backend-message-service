@@ -1,9 +1,11 @@
 package com.kingxunlian.message.biz.dao;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.kingxunlian.message.biz.dto.MessageTemplate;
 import com.kingxunlian.message.biz.dto.MessageTemplateExample;
 import com.kingxunlian.message.biz.mapper.MessageTemplateMapper;
+import com.kingxunlian.message.dto.request.MessageTemplateListFilter;
 import com.kingxunlian.utils.mybatis.MybatisExampleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,22 @@ public class MessageTemplateDao {
             return null;
         }
         return messageTemplateList.get(0);
+    }
+
+    /**
+     * 条件查询多条记录
+     * @param filter
+     * @return
+     */
+    public List<MessageTemplate> findListByFilter(MessageTemplateListFilter filter){
+        MessageTemplateExample example = new MessageTemplateExample();
+        List<String> ignroList  = Lists.newArrayList("pageNum","pageSize");
+        MybatisExampleUtils.genCriteriaByFilter(example.createCriteria(),filter,ignroList);
+        List<MessageTemplate> messageTemplateList = messageTemplateMapper.selectByExample(example);
+        if (messageTemplateList.size() == 0){
+            logger.warn("MessageTemplate is null,query condition is :{}", JSON.toJSONString(filter));
+        }
+        return messageTemplateList;
     }
 
     /**

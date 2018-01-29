@@ -1,6 +1,8 @@
 package com.kingxunlian.message.biz.service;
 
+import com.kingxunlian.common.PageList;
 import com.kingxunlian.message.biz.dto.SendMessageBatchDto;
+import com.kingxunlian.message.dto.request.MessageListFilter;
 import com.kingxunlian.message.dto.request.MessageSendRequest;
 import com.kingxunlian.message.dto.response.MessageSendResponse;
 
@@ -18,11 +20,17 @@ public interface IMessageService {
 
     Integer initUserMessage(UUID userId);
 
-    List<MessageSendResponse> getUserMessage(UUID userId);
+    PageList<MessageSendResponse> getUserMessage(UUID userId, Integer pageNum, Integer pageSize);
 
     Integer getUserUnreadMessageCount(UUID userId);
 
     void consumerAndSendBatchMessage(SendMessageBatchDto sendMessageBatchDto);
 
-    Boolean readMessage(UUID userId,Long messageId);
+    MessageSendResponse readMessage(UUID userId,Long messageId);
+
+    Boolean deleteMessage(UUID userId,Long messageId);
+
+    Boolean deleteAllMessage(UUID userId);
+
+    PageList<MessageSendResponse> getMessageList(MessageListFilter filter);
 }

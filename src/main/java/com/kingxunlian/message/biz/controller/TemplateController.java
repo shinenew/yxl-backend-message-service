@@ -1,8 +1,11 @@
 package com.kingxunlian.message.biz.controller;
 
+import com.kingxunlian.common.PageList;
 import com.kingxunlian.common.XLBaseResponse;
+import com.kingxunlian.message.biz.dto.MessageTemplate;
 import com.kingxunlian.message.biz.service.TemplateService;
 import com.kingxunlian.message.dto.request.MessageTemplateAddRequest;
+import com.kingxunlian.message.dto.request.MessageTemplateListFilter;
 import com.kingxunlian.message.dto.response.MessageTemplateResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +28,17 @@ public class TemplateController {
     @Autowired
     private TemplateService templateService;
 
+    /**
+     * 保存模版
+     * @param addRequest
+     * @return
+     */
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ApiOperation("模板管理-保存模板")
     public XLBaseResponse<MessageTemplateResponse> saveTemplate(@RequestBody @Valid MessageTemplateAddRequest addRequest){
         MessageTemplateResponse response = templateService.addMessageTemplate(addRequest);
         return XLBaseResponse.newInstance(response);
     }
+
+
 }

@@ -1,7 +1,10 @@
 package com.kingxunlian.message.biz.service;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.kingxunlian.common.PageList;
 import com.kingxunlian.exception.XLException;
 import com.kingxunlian.message.biz.dao.MessageStateDao;
 import com.kingxunlian.message.biz.dao.MessageSystemDao;
@@ -15,6 +18,7 @@ import com.kingxunlian.message.biz.dto.SendMessageBatchDto;
 import com.kingxunlian.message.config.MessageConfigParam;
 import com.kingxunlian.message.dto.enums.MessageStateEnum;
 import com.kingxunlian.message.dto.enums.MessageTypeEnum;
+import com.kingxunlian.message.dto.request.MessageListFilter;
 import com.kingxunlian.message.dto.request.MessageSendRequest;
 import com.kingxunlian.message.dto.response.MessageSendResponse;
 import com.kingxunlian.message.exception.MessageErrorCodeEnum;
@@ -23,6 +27,8 @@ import com.kingxunlian.message.mq.MQProducer;
 import com.kingxunlian.message.mq.MQProducerDto;
 import com.kingxunlian.message.redis.RedisTemplateKeyUtil;
 import com.kingxunlian.utils.CommonUtils;
+import com.kingxunlian.utils.PageListUtil;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,10 +122,11 @@ public class MessageService implements IMessageService{
 
     /**
      * 将一条消息标记为已读
+     * 并返回消息的详细内容
      * @param messageId
      * @return
      */
-    public Boolean readMessage(UUID userId,Long messageId){
+    public MessageSendResponse readMessage(UUID userId,Long messageId){
         MessageState stateQuery = new MessageState();
         stateQuery.setReceiveUser(userId);
         stateQuery.setMessageId(messageId);
@@ -131,13 +138,65 @@ public class MessageService implements IMessageService{
         }
         if (!MessageStateEnum.UNREAD.equals(messageState.getMessageState())){
             logger.error("Message is not unread,state error!");
+            return null;
+        }
+        MessageSendResponse messageSendResponse = new MessageSendResponse();
+        //装入消息数据
+        messageSendResponse.setMessageId(messageId);
+        messageSendResponse.setCreateTime(messageState.getCreateTime());
+        messageSendResponse.setUpdateTime(messageState.getUpdateTime());
+        messageSendResponse.setIsDelete(messageState.getIsDelete());
+        messageSendResponse.setMessageState(messageState.getMessageState());
+        getMessageTextByMessageId(messageSendResponse,messageId);
+        messageState.setMessageState(MessageStateEnum.READ);
+        messageState.setUpdateTime(new Date());
+        messageStateDao.updaupdateByPrimaryKeyteBy(messageState);
+        return messageSendResponse;
+    }
+
+    /**
+     * 删除消息
+     * @param userId
+     * @param messageId
+     * @return
+     */
+    public Boolean deleteMessage(UUID userId,Long messageId){
+        MessageState stateQuery = new MessageState();
+        stateQuery.setReceiveUser(userId);
+        stateQuery.setMessageId(messageId);
+        MessageState messageState = messageStateDao.findOneByFilter(stateQuery);
+        if (messageState == null){
+            String msg = MessageFormat.format("Message :{0} not found!",messageId.toString());
+            logger.error(msg);
+            throw new XLException(msg,MessageErrorCodeEnum.MESSAGE_NOT_FOUND);
+        }
+        //判断是否已经删除
+        if (0 != messageState.getIsDelete()){
+            logger.error("Message is deleted,state error!");
             return false;
         }
-        messageState.setMessageState(MessageStateEnum.READ);
+        messageState.setIsDelete(1);
         messageState.setUpdateTime(new Date());
         messageStateDao.updaupdateByPrimaryKeyteBy(messageState);
         return true;
     }
+
+    /**
+     * 删除当前用户下的所有消息
+     * @param userId
+     * @return
+     */
+    public Boolean deleteAllMessage(UUID userId){
+        MessageState stateQuery = new MessageState();
+        stateQuery.setReceiveUser(userId);
+        stateQuery.setIsDelete(0);
+        MessageState state = new MessageState();
+        state.setIsDelete(1);
+        messageStateDao.updateBySelective(state,stateQuery);
+        return true;
+    }
+
+
 
     /**
      * 发送单条消息
@@ -398,41 +457,63 @@ public class MessageService implements IMessageService{
      * @param userId
      * @return
      */
-    public List<MessageSendResponse> getUserMessage(UUID userId){
+    public PageList<MessageSendResponse> getUserMessage(UUID userId, Integer pageNum, Integer pageSize){
         MessageState query = new MessageState();
         query.setIsDelete(0);
         query.setReceiveUser(userId);
+        final Page<MessageState> page = PageHelper.startPage(pageNum,pageSize);
         List<MessageState> messageStateList = messageStateDao.findListByFilter(query);
+        PageList<MessageState> messageStatePageList = PageListUtil.createPageList(page);
+        //将分页数据装入聚合的Dto
+        PageList<MessageSendResponse> responsePageList  = new PageList<>();
+        responsePageList.setPageMeta(messageStatePageList.getPageMeta());
+        List<MessageSendResponse> messageResponseList = getMessageTextByMessageId(messageStateList);
+        responsePageList.setItems(messageResponseList);
+        return responsePageList;
+    }
+
+    /**
+     * 获取消息列表
+     * @param filter
+     * @return
+     */
+    public PageList<MessageSendResponse> getMessageList(MessageListFilter filter){
+
+        final Page<MessageState> page = PageHelper.startPage(
+                filter.getPageNum(),
+                filter.getPageSize());
+        List<MessageState> messageStateList = messageStateDao.findListByFilter(filter);
+        PageList<MessageState> messageStatePageList = PageListUtil.createPageList(page);
+        //将分页数据装入聚合的Dto
+        PageList<MessageSendResponse> responsePageList  = new PageList<>();
+        responsePageList.setPageMeta(messageStatePageList.getPageMeta());
+        List<MessageSendResponse> messageResponseList = getMessageTextByMessageId(messageStateList);
+        responsePageList.setItems(messageResponseList);
+        return responsePageList;
+    }
+
+
+    /**
+     * 根据用户的消息状态查询完整消息
+     * @param messageStateList
+     * @return
+     */
+    private List<MessageSendResponse> getMessageTextByMessageId(List<MessageState> messageStateList){
         List<MessageSendResponse> messageResponseList = messageStateList.stream()
                 .map(messageState -> {
                     Long messageId = messageState.getMessageId();
                     MessageSendResponse messageSendResponse = new MessageSendResponse();
-                    MessageText messageText = messageTextDao.findByMessageId(messageId);
                     //装入消息数据
                     messageSendResponse.setMessageId(messageId);
                     messageSendResponse.setCreateTime(messageState.getCreateTime());
                     messageSendResponse.setUpdateTime(messageState.getUpdateTime());
                     messageSendResponse.setIsDelete(messageState.getIsDelete());
                     messageSendResponse.setMessageState(messageState.getMessageState());
-                    if (messageText != null){
-                        messageSendResponse.setMessageContent(messageText.getMessageContent());
-                        messageSendResponse.setMessageUrl(messageText.getMessageUrl());
-                        messageSendResponse.setMessageType(messageText.getMessageType());
-                        messageSendResponse.setMessageExtra(messageText.getMessageExtra());
-                        messageSendResponse.setMessageSystem(messageText.getMessageSystem());
-                    }else {
-                        MessageSystem messageSystem = messageSystemDao.findByMessageId(messageId);
-                        messageSendResponse.setMessageContent(messageSystem.getMessageContent());
-                        messageSendResponse.setMessageUrl(messageSystem.getMessageUrl());
-                        messageSendResponse.setMessageType(MessageTypeEnum.SYSTEM);
-                        messageSendResponse.setMessageExtra(messageSystem.getMessageExtra());
-                        messageSendResponse.setMessageSystem("系统消息");
-                    }
+                    getMessageTextByMessageId(messageSendResponse,messageId);
                     return messageSendResponse;
                 }).collect(Collectors.toList());
         return messageResponseList;
     }
-
 
     /**
      * 查询用户的唯独消息数
@@ -446,6 +527,32 @@ public class MessageService implements IMessageService{
         query.setIsDelete(0);
         List<MessageState> userUnreadMessages = messageStateDao.findListByFilter(query);
         return userUnreadMessages;
+    }
+
+    /**
+     * 查询消息的详细内容
+     * @param messageId
+     * @return
+     */
+    private MessageSendResponse getMessageTextByMessageId(MessageSendResponse messageSendResponse ,Long messageId){
+        MessageText messageText = messageTextDao.findByMessageId(messageId);
+        //装入消息数据
+        messageSendResponse.setMessageId(messageId);
+        if (messageText != null){
+            messageSendResponse.setMessageContent(messageText.getMessageContent());
+            messageSendResponse.setMessageUrl(messageText.getMessageUrl());
+            messageSendResponse.setMessageType(messageText.getMessageType());
+            messageSendResponse.setMessageExtra(messageText.getMessageExtra());
+            messageSendResponse.setMessageSystem(messageText.getMessageSystem());
+        }else {
+            MessageSystem messageSystem = messageSystemDao.findByMessageId(messageId);
+            messageSendResponse.setMessageContent(messageSystem.getMessageContent());
+            messageSendResponse.setMessageUrl(messageSystem.getMessageUrl());
+            messageSendResponse.setMessageType(MessageTypeEnum.SYSTEM);
+            messageSendResponse.setMessageExtra(messageSystem.getMessageExtra());
+            messageSendResponse.setMessageSystem("系统消息");
+        }
+        return messageSendResponse;
     }
 
 
