@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -51,6 +52,7 @@ public class MessageBackendController {
      * @return
      */
     @RequestMapping(value = "/login",method = RequestMethod.POST)
+    @ApiOperation("后台登录")
     public XLBaseResponse<String> login(@RequestBody @Valid BackendLoginRequest loginRequest){
         String token = "23h29u7sdf92h1se209ue3121";
         if ("chenliang".equals(loginRequest.getLoginName()) && "test123".equals(loginRequest.getLoginPassword())){
@@ -66,6 +68,7 @@ public class MessageBackendController {
      * @return
      */
     @RequestMapping(value = "/messageList",method = RequestMethod.POST)
+    @ApiOperation("消息管理-查询消息列表")
     public XLBaseResponse<PageList<MessageSendResponse>> getMessageList(@RequestBody @Valid MessageListFilter filter){
         PageList<MessageSendResponse> userMessageList = messageService.getMessageList(filter);
         return XLBaseResponse.newInstance(userMessageList);
@@ -97,7 +100,6 @@ public class MessageBackendController {
         return XLBaseResponse.newInstance(result);
     }
 
-
     /**
      * 查询模版列表
      * @param filter
@@ -110,7 +112,6 @@ public class MessageBackendController {
         return XLBaseResponse.newInstance("OK");
     }
 
-
     /**
      * 保存模版
      * @param addRequest
@@ -121,6 +122,18 @@ public class MessageBackendController {
     public XLBaseResponse<MessageTemplateResponse> saveTemplate(@RequestBody @Valid MessageTemplateAddRequest addRequest){
         MessageTemplateResponse response = templateService.addMessageTemplate(addRequest);
         return XLBaseResponse.newInstance(response);
+    }
+
+    /**
+     * 根据模版Id查询模块的内容
+     * @param templateId
+     * @return
+     */
+    @RequestMapping(value = "/template",method = RequestMethod.GET)
+    @ApiOperation("模块管理-查询模版内容")
+    public XLBaseResponse<MessageTemplateResponse> getMessageTemplate(@RequestParam @Valid Long templateId){
+        MessageTemplateResponse templateResponse =  templateService.getMessageTemplate(templateId);
+        return XLBaseResponse.newInstance(templateResponse);
     }
 
 

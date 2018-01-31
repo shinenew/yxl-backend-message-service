@@ -10,6 +10,7 @@ import com.kingxunlian.message.dto.request.MessageTemplateAddRequest;
 import com.kingxunlian.message.dto.request.MessageTemplateListFilter;
 import com.kingxunlian.message.dto.response.MessageTemplateResponse;
 import com.kingxunlian.message.idgen.IdGenHelper;
+import com.kingxunlian.utils.CommonUtils;
 import com.kingxunlian.utils.PageListUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,6 +105,21 @@ public class TemplateService implements ITemplateService{
         filter.setTemplateCode(messageTemplate.getTemplateCode());
         messageTemplateDao.updateRecordBySeletive(update,filter);
         return true;
+    }
+
+
+    /**
+     * 获取模版内容
+     * @param templateId
+     * @return
+     */
+    public MessageTemplateResponse getMessageTemplate(Long templateId){
+        MessageTemplate filter = new MessageTemplate();
+        filter.setTemplateId(templateId);
+        MessageTemplate messageTemplate = messageTemplateDao.findOneByFilter(filter);
+        MessageTemplateResponse messageTemplateResponse  = new MessageTemplateResponse();
+        CommonUtils.beanCopy(messageTemplate,messageTemplateResponse);
+        return messageTemplateResponse;
     }
 
 

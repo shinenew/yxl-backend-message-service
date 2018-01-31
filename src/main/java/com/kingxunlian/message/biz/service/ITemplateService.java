@@ -19,5 +19,7 @@ public interface ITemplateService {
 
     Boolean updateTemplateState(MessageTemplate messageTemplate);
 
+    MessageTemplateResponse getMessageTemplate(Long templateId);
+
 
 }

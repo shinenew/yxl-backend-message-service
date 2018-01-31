@@ -478,7 +478,6 @@ public class MessageService implements IMessageService{
      * @return
      */
     public PageList<MessageSendResponse> getMessageList(MessageListFilter filter){
-
         final Page<MessageState> page = PageHelper.startPage(
                 filter.getPageNum(),
                 filter.getPageSize());
