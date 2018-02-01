@@ -72,4 +72,4 @@ create table kxl_message_text
 
 ALTER TABLE kxl_message_template ADD template_title VARCHAR(36) NULL COMMENT '模版标题';
 
-
+INSERT INTO `kxl_dev_db`.`kxl_message_template`(`template_id`, `template_code`, `template_name`, `template_context`, `template_url`, `template_app`, `template_enable`, `create_time`, `update_time`, `template_title`) VALUES (462124668539633664, 'cas-conact-email-template', '中科院外网咨询邮件（系统自动发送）', '院所名称：${company} \n您的姓名：${name} \n您的电话：${phone} \n您的邮件：${email}', 'https://www.kingxunlian.com/', 'sco-service', 1, '2018-02-01 15:59:52', NULL, '中科院外网咨询邮件（系统自动发送）');
