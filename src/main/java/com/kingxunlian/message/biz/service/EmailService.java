@@ -56,8 +56,7 @@ public class EmailService implements IEmailService{
             logger.error(msg);
             throw new XLException(msg, MessageErrorCodeEnum.TEMPLATE_NOT_FOUND);
         }
-        String emailContext = messageTemplate.getTemplateContext();
-        TemplateUtil.renderTemplate(emailContext, emailSendRequest.getMessageParameter());
+        String emailContext = TemplateUtil.renderTemplate(messageTemplate.getTemplateContext(), emailSendRequest.getMessageParameter());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(Sender);
         message.setTo(emailSendRequest.getReceiveUser()); //自己给自己发送邮件

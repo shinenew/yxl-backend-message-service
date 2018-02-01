@@ -54,6 +54,7 @@ public class TemplateService implements ITemplateService{
             MessageTemplate createTemplate = new MessageTemplate();
             createTemplate.setTemplateCode(addRequest.getTemplateCode());
             createTemplate.setTemplateName(addRequest.getTemplateName());
+            createTemplate.setTemplateTitle(addRequest.getTemplateName());
             createTemplate.setTemplateApp(addRequest.getTemplateApp());
             createTemplate.setTemplateContext(addRequest.getTemplateContext());
             createTemplate.setTemplateUrl(addRequest.getTemplateUrl());
