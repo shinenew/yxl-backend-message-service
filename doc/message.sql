@@ -70,6 +70,6 @@ create table kxl_message_text
 )
 ;
 
-
+ALTER TABLE kxl_message_template ADD template_title VARCHAR(36) NULL COMMENT '模版标题';
 
 

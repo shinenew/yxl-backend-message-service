@@ -694,6 +694,76 @@ public class MessageTemplateExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andTemplateTitleIsNull() {
+            addCriterion("template_title is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleIsNotNull() {
+            addCriterion("template_title is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleEqualTo(String value) {
+            addCriterion("template_title =", value, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleNotEqualTo(String value) {
+            addCriterion("template_title <>", value, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleGreaterThan(String value) {
+            addCriterion("template_title >", value, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleGreaterThanOrEqualTo(String value) {
+            addCriterion("template_title >=", value, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleLessThan(String value) {
+            addCriterion("template_title <", value, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleLessThanOrEqualTo(String value) {
+            addCriterion("template_title <=", value, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleLike(String value) {
+            addCriterion("template_title like", value, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleNotLike(String value) {
+            addCriterion("template_title not like", value, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleIn(List<String> values) {
+            addCriterion("template_title in", values, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleNotIn(List<String> values) {
+            addCriterion("template_title not in", values, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleBetween(String value1, String value2) {
+            addCriterion("template_title between", value1, value2, "templateTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andTemplateTitleNotBetween(String value1, String value2) {
+            addCriterion("template_title not between", value1, value2, "templateTitle");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

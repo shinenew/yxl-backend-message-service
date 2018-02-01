@@ -15,6 +15,7 @@ import com.kingxunlian.message.biz.dto.MessageSystem;
 import com.kingxunlian.message.biz.dto.MessageTemplate;
 import com.kingxunlian.message.biz.dto.MessageText;
 import com.kingxunlian.message.biz.dto.SendMessageBatchDto;
+import com.kingxunlian.message.biz.util.TemplateUtil;
 import com.kingxunlian.message.config.MessageConfigParam;
 import com.kingxunlian.message.dto.enums.MessageStateEnum;
 import com.kingxunlian.message.dto.enums.MessageTypeEnum;
@@ -215,8 +216,7 @@ public class MessageService implements IMessageService{
         messageText.setMessageSystem(request.getAppCode());
         messageText.setCreatorId(request.getSendUser().toString());
         //替换模版的参数
-        Map<String,String> messageParameters = (Map<String,String>)JSON.parseObject(request.getMessageParameter(),Map.class);
-        String messageContext = renderTemplate(template.getTemplateContext(),messageParameters);
+        String messageContext = TemplateUtil.renderTemplate(template.getTemplateContext(),request.getMessageParameter());
         messageText.setMessageContent(messageContext);
         messageText.setMessageExtra(request.getMessageExtra());
         messageTextDao.insert(messageText);
@@ -261,8 +261,7 @@ public class MessageService implements IMessageService{
         messageText.setMessageSystem(request.getAppCode());
         messageText.setCreatorId(request.getSendUser().toString());
         //替换模版的参数
-        Map<String,String> messageParameters = (Map<String,String>)JSON.parseObject(request.getMessageParameter(),Map.class);
-        String messageContext = renderTemplate(template.getTemplateContext(),messageParameters);
+        String messageContext = TemplateUtil.renderTemplate(template.getTemplateContext(),request.getMessageParameter());
         messageText.setMessageContent(messageContext);
         messageText.setMessageExtra(request.getMessageExtra());
         messageTextDao.insert(messageText);
@@ -338,8 +337,7 @@ public class MessageService implements IMessageService{
         messageSystem.setMessageId(messageId);
         messageSystem.setMessageUrl(template.getTemplateUrl());
         //替换模版的参数
-        Map<String,String> messageParameters = (Map<String,String>)JSON.parseObject(request.getMessageParameter(),Map.class);
-        String messageContext = renderTemplate(template.getTemplateContext(),messageParameters);
+        String messageContext = TemplateUtil.renderTemplate(template.getTemplateContext(),request.getMessageParameter());
         messageSystem.setMessageContent(messageContext);
         messageSystem.setMessageExtra(request.getMessageExtra());
         messageSystem.setMessageTitle("");
@@ -347,38 +345,6 @@ public class MessageService implements IMessageService{
         messageSystemDao.insert(messageSystem);
         return messageSystem;
     }
-
-
-    /**
-     * 替换消息模板里面的参数如：${name}
-     * @param content
-     * @param map
-     * @return
-     */
-    private   String renderTemplate(String content, Map<String, String> map){
-        Set<Map.Entry<String, String>> sets = map.entrySet();
-        try {
-            for(Map.Entry<String, String> entry : sets) {
-                String regex = "\\$\\{" + entry.getKey() + "\\}";
-                Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(content);
-                content = matcher.replaceAll(entry.getValue());
-            }
-            //如果替换后文本里还是有${},则抛出异常
-            if (content.lastIndexOf("${") != -1){
-                String msg = MessageFormat.format("Parameters and templates do not match,please check!Send Parameter is:{0}",JSON.toJSONString(map));
-                logger.error(msg);
-                throw new XLException(msg,MessageErrorCodeEnum.SERVER_INNER_ERROR);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            String msg = MessageFormat.format("Render message template failed,message is:{0}",e.getMessage());
-            logger.error(msg);
-            throw new XLException(msg,MessageErrorCodeEnum.TEMPLATE_RENDER_FAILED);
-        }
-        return content;
-    }
-
 
     /**
      * 初始化用户的未读消息
@@ -491,7 +457,6 @@ public class MessageService implements IMessageService{
         return responsePageList;
     }
 
-
     /**
      * 根据用户的消息状态查询完整消息
      * @param messageStateList
@@ -553,6 +518,5 @@ public class MessageService implements IMessageService{
         }
         return messageSendResponse;
     }
-
 
 }

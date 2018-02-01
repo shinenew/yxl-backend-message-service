@@ -11,6 +11,7 @@
     <result column="template_enable" property="templateEnable" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="template_title" property="templateTitle" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List" >
     template_id, template_code, template_name, template_context, template_url, template_app, 
-    template_enable, create_time, update_time
+    template_enable, create_time, update_time, template_title
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kingxunlian.message.biz.dto.MessageTemplateExample" >
     select
@@ -108,12 +109,12 @@
   <insert id="insert" parameterType="com.kingxunlian.message.biz.dto.MessageTemplate" >
     insert into kxl_message_template (template_id, template_code, template_name, 
       template_context, template_url, template_app, 
-      template_enable, create_time, update_time
-      )
+      template_enable, create_time, update_time, 
+      template_title)
     values (#{templateId,jdbcType=BIGINT}, #{templateCode,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR}, 
       #{templateContext,jdbcType=VARCHAR}, #{templateUrl,jdbcType=VARCHAR}, #{templateApp,jdbcType=VARCHAR}, 
-      #{templateEnable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{templateEnable,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{templateTitle,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.kingxunlian.message.biz.dto.MessageTemplate" >
     insert into kxl_message_template
@@ -145,6 +146,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="templateTitle != null" >
+        template_title,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="templateId != null" >
@@ -173,6 +177,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateTitle != null" >
+        #{templateTitle,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -212,6 +219,9 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.templateTitle != null" >
+        template_title = #{record.templateTitle,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -227,7 +237,8 @@
       template_app = #{record.templateApp,jdbcType=VARCHAR},
       template_enable = #{record.templateEnable,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      template_title = #{record.templateTitle,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -259,6 +270,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="templateTitle != null" >
+        template_title = #{templateTitle,jdbcType=VARCHAR},
+      </if>
     </set>
     where template_id = #{templateId,jdbcType=BIGINT}
   </update>
@@ -271,7 +285,8 @@
       template_app = #{templateApp,jdbcType=VARCHAR},
       template_enable = #{templateEnable,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      template_title = #{templateTitle,jdbcType=VARCHAR}
     where template_id = #{templateId,jdbcType=BIGINT}
   </update>
 </mapper>

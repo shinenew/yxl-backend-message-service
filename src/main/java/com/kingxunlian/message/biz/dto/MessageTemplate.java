@@ -1,8 +1,5 @@
 package com.kingxunlian.message.biz.dto;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,9 +7,6 @@ public class MessageTemplate implements Serializable {
     /**
      * 消息模版ID
      */
-    @JSONField(
-            serializeUsing = ToStringSerializer.class
-    )
     private Long templateId;
 
     /**
@@ -54,6 +48,11 @@ public class MessageTemplate implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 模版标题
+     */
+    private String templateTitle;
 
     private static final long serialVersionUID = 1L;
 
@@ -127,5 +126,13 @@ public class MessageTemplate implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTemplateTitle() {
+        return templateTitle;
+    }
+
+    public void setTemplateTitle(String templateTitle) {
+        this.templateTitle = templateTitle == null ? null : templateTitle.trim();
     }
 }
