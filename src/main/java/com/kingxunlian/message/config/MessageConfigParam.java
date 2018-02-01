@@ -32,7 +32,17 @@ public class MessageConfigParam {
     @Value("${rocketmq.consumer.group.batch.send}")
     private String messageBatchSendConsumer;
 
+    @Value("${spring.mail.host}")
+    private String mailHost;
 
+    @Value("${spring.mail.port}")
+    private Integer mailPort;
+
+    @Value("${spring.mail.username}")
+    private String mailUserName;
+
+    @Value("${spring.mail.password}")
+    private String mailUserPassword;
 
     //==================== 配置自动刷新 start =========================
 
@@ -78,6 +88,42 @@ public class MessageConfigParam {
 
     public MessageConfigParam setMessageBatchSendConsumer(String messageBatchSendConsumer) {
         this.messageBatchSendConsumer = messageBatchSendConsumer;
+        return this;
+    }
+
+    public String getMailHost() {
+        return mailHost;
+    }
+
+    public MessageConfigParam setMailHost(String mailHost) {
+        this.mailHost = mailHost;
+        return this;
+    }
+
+    public Integer getMailPort() {
+        return mailPort;
+    }
+
+    public MessageConfigParam setMailPort(Integer mailPort) {
+        this.mailPort = mailPort;
+        return this;
+    }
+
+    public String getMailUserName() {
+        return mailUserName;
+    }
+
+    public MessageConfigParam setMailUserName(String mailUserName) {
+        this.mailUserName = mailUserName;
+        return this;
+    }
+
+    public String getMailUserPassword() {
+        return mailUserPassword;
+    }
+
+    public MessageConfigParam setMailUserPassword(String mailUserPassword) {
+        this.mailUserPassword = mailUserPassword;
         return this;
     }
 }
