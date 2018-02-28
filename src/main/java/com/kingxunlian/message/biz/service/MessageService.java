@@ -146,14 +146,15 @@ public class MessageService implements IMessageService{
         messageState.setUpdateTime(new Date());
         messageStateDao.updaupdateByPrimaryKeyteBy(messageState);
         //将缓存的未读消息数减1,不重新查询数据库
-        List<MessageState> userUnreadMessages = getUserUnreadMessage(userId);
+//        List<MessageState> userUnreadMessages = getUserUnreadMessage(userId);
         String userMessageCountKey = RedisTemplateKeyUtil.getUserUnreadMessageCountKey(userId);
-        String userUnreadMessageCount = String.valueOf(userUnreadMessages.size());
+//        String userUnreadMessageCount = String.valueOf(userUnreadMessages.size());
         if (redisTemplate.hasKey(userMessageCountKey)){
-            //redisTemplate.opsForValue().get(userMessageCountKey);
+            String newUnreadCount = redisTemplate.opsForValue().get(userMessageCountKey);
+            Integer count = Integer.parseInt(newUnreadCount) - 1;
             redisTemplate.delete(userMessageCountKey);
             redisTemplate.opsForValue().set(userMessageCountKey,
-                    userUnreadMessageCount,
+                    count.toString(),
                     messageConfigParam.getMessageCountExpireTime(),
                     TimeUnit.MINUTES);
         }
