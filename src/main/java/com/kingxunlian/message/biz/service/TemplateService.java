@@ -4,7 +4,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.kingxunlian.common.PageList;
 import com.kingxunlian.message.biz.dao.MessageTemplateDao;
-import com.kingxunlian.message.biz.dto.MessageState;
 import com.kingxunlian.message.biz.dto.MessageTemplate;
 import com.kingxunlian.message.dto.request.MessageTemplateAddRequest;
 import com.kingxunlian.message.dto.request.MessageTemplateListFilter;

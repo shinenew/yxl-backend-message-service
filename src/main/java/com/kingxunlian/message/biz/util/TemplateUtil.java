@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -39,8 +40,11 @@ public class TemplateUtil {
                 content = matcher.replaceAll(entry.getValue());
             }
             //如果替换后文本里还是有${},则抛出异常
-            if (content.lastIndexOf("${") != -1){
-                String msg = MessageFormat.format("Parameters and templates do not match,please check!Send Parameter is:{0}",jsonParameter);
+            String cRegex = "\\$\\{.*?\\}";
+            Pattern pattern = Pattern.compile(cRegex);
+            Matcher matcher = pattern.matcher(content);
+            if (matcher.find()){
+                String msg = MessageFormat.format("Parameters and templates does not match,please check!Send Parameter is:{0}",jsonParameter);
                 logger.error(msg);
                 throw new XLException(msg, MessageErrorCodeEnum.SERVER_INNER_ERROR);
             }
@@ -52,4 +56,26 @@ public class TemplateUtil {
         }
         return content;
     }
+
+
+    /**
+    public static void main(String[] args){
+        String context = "name:${name},sex:${sex},age:${age}";
+        Map<String,String> parameter = new HashMap<>();
+        parameter.put("name","测试");
+        parameter.put("sex","男");
+        parameter.put("age","20");
+        context = renderTemplate(context,JSON.toJSONString(parameter));
+        System.out.println(context);
+
+        String cRegex = "\\$\\{.*?\\}";
+        Pattern pattern = Pattern.compile(cRegex);
+        Matcher matcher = pattern.matcher(context);
+        if (matcher.find()){
+            System.out.println(context);
+        }
+    }
+   **/
+
+
 }

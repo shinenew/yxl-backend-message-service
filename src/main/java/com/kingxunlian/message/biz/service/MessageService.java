@@ -1,6 +1,5 @@
 package com.kingxunlian.message.biz.service;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
@@ -27,9 +26,7 @@ import com.kingxunlian.message.idgen.IdGenHelper;
 import com.kingxunlian.message.mq.MQProducer;
 import com.kingxunlian.message.mq.MQProducerDto;
 import com.kingxunlian.message.redis.RedisTemplateKeyUtil;
-import com.kingxunlian.utils.CommonUtils;
 import com.kingxunlian.utils.PageListUtil;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +40,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -152,7 +145,33 @@ public class MessageService implements IMessageService{
         messageState.setMessageState(MessageStateEnum.READ);
         messageState.setUpdateTime(new Date());
         messageStateDao.updaupdateByPrimaryKeyteBy(messageState);
+        //将缓存的未读消息数减1,不重新查询数据库
+        List<MessageState> userUnreadMessages = getUserUnreadMessage(userId);
+        String userMessageCountKey = RedisTemplateKeyUtil.getUserUnreadMessageCountKey(userId);
+        String userUnreadMessageCount = String.valueOf(userUnreadMessages.size());
+        if (redisTemplate.hasKey(userMessageCountKey)){
+            //redisTemplate.opsForValue().get(userMessageCountKey);
+            redisTemplate.delete(userMessageCountKey);
+            redisTemplate.opsForValue().set(userMessageCountKey,
+                    userUnreadMessageCount,
+                    messageConfigParam.getMessageCountExpireTime(),
+                    TimeUnit.MINUTES);
+        }
         return messageSendResponse;
+    }
+
+    /**
+     * 将用户的所有消息标记为已读
+     * @param userId
+     * @return
+     */
+    public MessageSendResponse readUserAllMessage(UUID userId){
+        //将缓存的未读消息设置为0
+        //将消息的状态改为已读
+        MessageSendResponse messageSendResponse = new MessageSendResponse();
+
+        return messageSendResponse;
+
     }
 
     /**
